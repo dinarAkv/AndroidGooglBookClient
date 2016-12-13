@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">GoogleBookClient</string>
+
+    <!-- General. -->
+    <string name="hintSearchBookText">Enter key words for find information about book.</string>
+    <string name="searchButtonText">Search</string>
+    <string name="requestFailureText">Something went wrong:</string>
+
+
+
+
+    <!-- Book item. -->
+    <string name="titleOfBookText">Title:</string>
+    <string name="authorsOfBookText">Authors:</string>
+    <string name="yearPublishOfBookText">Year:</string>
+    <string name="discriptionOfBookText">Discription:</string>
+
+
+
+
+
+    <!-- Popup options for floating action button. -->
+    <string name="sortByTitleText">Sort by title</string>
+    <string name="sortByPublishDateText">Sort by publish date</string>
+
+
+
+
+
+
+
+</resources>
