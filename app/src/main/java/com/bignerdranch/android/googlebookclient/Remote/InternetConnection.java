@@ -40,9 +40,16 @@ public class InternetConnection {
     /** To reailze MVP pattern. */
     private MainPresenter mMainPresenter;
 
+    /** Sign that this item doesn't has thumbnail. */
+    private static final String NO_THUMBNAIL = "no_thumbnail";
 
-    /** Add search command for query. */
+
+
+    /** Search command for query. */
     private static final String SEARCH_CMD = "search+";
+
+    /** Page number command for query. */
+    private static final String PAGE_NUM_CMD = "startIndex=";
 
     /** Get user request. */
 //    String requestStr = SEARCH_CMD + mEditText_BookSearch.getText().toString();
@@ -66,17 +73,20 @@ public class InternetConnection {
         GoogleBookServ googleBookServ = GoogleBookServ.retrofit.create(GoogleBookServ.class);
 
 
-
+        /** Form call message. */
         final Call<BookFindResponse> callSearchRequest = googleBookServ.bookRequest(fullRequest);
 
-        Log.d(TAG, "URL = "  + googleBookServ.bookRequest(fullRequest).request().url().toString());
 
-
+        /** Do call in internal thread and react on answers from server. */
         callSearchRequest.enqueue(new Callback<BookFindResponse>() {
             @Override
             public void onResponse(Call<BookFindResponse> call, Response<BookFindResponse> response) {
 
-                  mMainPresenter.onResponseToRequestOfServer(formItemsOfBookData(response));
+                /** Get total number of items found for this request. */
+                int totalNumItems = response.body().getTotalItems();
+
+                /** Notifier presenter. */
+                mMainPresenter.onResponseToRequestOfServer(formItemsOfBookData(response), totalNumItems);
             }
 
             @Override
@@ -86,6 +96,53 @@ public class InternetConnection {
         });
 
     }
+
+
+    /**
+     * Function initialize new call to server with specify by user key words and specified page number
+     * of searching result.
+     * @param userRequest - set of key words typed by user.
+     * @param pageNum - specified searching result page.
+     */
+    public void getSpecifySearchingResultPage(String userRequest, int pageNum)
+    {
+
+        /** Combine user request, default request command and page number request. */
+        String fullRequest = SEARCH_CMD + userRequest;
+
+        /** Build object for requests. */
+        GoogleBookServ googleBookServ = GoogleBookServ.retrofit.create(GoogleBookServ.class);
+
+
+        /** Form call message. */
+        final Call<BookFindResponse> callSearchRequest = googleBookServ.nextResPageRequest(fullRequest, Integer.toString(pageNum));
+
+//        Log.d(TAG, "URL = "  + googleBookServ.bookRequest(fullRequest).request().url().toString());
+
+
+        callSearchRequest.enqueue(new Callback<BookFindResponse>() {
+            @Override
+            public void onResponse(Call<BookFindResponse> call, Response<BookFindResponse> response) {
+
+                /** Get total number of items found for this request. */
+                int totalNumItems = response.body().getTotalItems();
+
+                /** Notifier presenter. */
+                mMainPresenter.onResponseToRequestOfServer(formItemsOfBookData(response), totalNumItems);
+            }
+
+            @Override
+            public void onFailure(Call<BookFindResponse> call, Throwable t) {
+                mMainPresenter.onFailureToRequestOfServer(call, t);
+            }
+        });
+    }
+
+
+
+
+
+
 
 
     /**
@@ -158,8 +215,19 @@ public class InternetConnection {
         /** Fill description of book. */
         bookViewItem.setmDiscription(item.getVolumeInfo().getDescription());
 
-        /** Set url of image of this book. */
-        bookViewItem.setmUrl(item.getVolumeInfo().getImageLinks().getThumbnail());
+        /** Set url of image of this book.
+         * If there is thumbnail then set link. */
+        if (item.getVolumeInfo().getImageLinks() != null)
+        {
+            bookViewItem.setmUrl(item.getVolumeInfo().getImageLinks().getThumbnail());
+        }
+        /** Else set this field as null. */
+        else
+        {
+            bookViewItem.setmUrl(null);
+        }
+
+
 
         return bookViewItem;
     }

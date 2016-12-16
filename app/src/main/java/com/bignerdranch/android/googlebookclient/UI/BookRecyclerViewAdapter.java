@@ -98,10 +98,19 @@ public class BookRecyclerViewAdapter extends RecyclerView.Adapter<BookRecyclerVi
         holder.mTextView_Discription.setText(bookViewItem.getmDiscription());
 
 
+        /** If URL field contain link than load picture from this link. */
+        if (bookViewItem.getmUrl() != null)
+        {
+            Picasso.with(mView.getContext()).load(bookViewItem.getmUrl())
+                    .fit()
+                    .into(holder.mImageView_Pic);
+        }
+        /** Else set default book picture. */
+        else
+        {
+            holder.mImageView_Pic.setImageResource(R.drawable.default_book_pic);
+        }
 
-        Picasso.with(mView.getContext()).load(bookViewItem.getmUrl())
-                .fit()
-                .into(holder.mImageView_Pic);
 
     }
 

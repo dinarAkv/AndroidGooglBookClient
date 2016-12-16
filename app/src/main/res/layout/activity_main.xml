@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/hintSearchBookText"
-        android:text="pushkin"
+        android:text="sd rf gg ht pp 12 oo 22"
         android:id="@+id/editTextBookSearch"
         />
 
@@ -82,7 +82,49 @@
 
         </LinearLayout>
 
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal|bottom"
+            android:layout_gravity="bottom"
+            android:weightSum="1"
+            >
+
+
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="0.3"
+                android:src="@drawable/left_arrow_enable_selector"
+                android:id="@+id/imageButtonLeftDecPageNum"
+                android:visibility="gone"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                />
+
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="0.3"
+                android:src="@drawable/right_arrow_enable_selector"
+                android:id="@+id/imageButtonRightIncPageNum"
+                android:visibility="gone"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                />
+        </LinearLayout>
+
+
+
     </android.support.design.widget.CoordinatorLayout>
+
+
+
 
 
 

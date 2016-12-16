@@ -6,10 +6,13 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bignerdranch.android.googlebookclient.R;
@@ -34,6 +37,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private MainPresenter mMainPresenter;
 
 
+    /** Image before search link. */
+    @BindView(R.id.imageViewStartImage)
+    ImageView mImageView_StartImage;
+
     /** Get search requests. */
     @BindView(R.id.editTextBookSearch)
     EditText mEditText_BookSearch;
@@ -54,6 +61,13 @@ public class MainActivity extends AppCompatActivity implements MainView {
     RecyclerView mRecyclerView_BookItems;
 
 
+    /** Left arrow imageButton for decrease page number of search result.  */
+    @BindView(R.id.imageButtonLeftDecPageNum)
+    ImageButton mImageButton_LeftDecPageNum;
+
+    /** Right arrow imageButton for increase page number of search result.  */
+    @BindView(R.id.imageButtonRightIncPageNum)
+    ImageButton mImageButton_RightIncPageNum;
 
 
 
@@ -78,6 +92,12 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     }
 
+
+    @Override
+    public void hideStartImage()
+    {
+        mImageView_StartImage.setVisibility(View.GONE);
+    }
 
     /***
      * Get user typed search request.
@@ -154,6 +174,45 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     }
 
+
+    @Override
+    public void showLeftRightRowImageBtn() {
+        mImageButton_LeftDecPageNum.setVisibility(View.VISIBLE);
+        mImageButton_RightIncPageNum.setVisibility(View.VISIBLE);
+    }
+
+
+
+    @Override
+    public void hideLeftRightRowImageBtn() {
+        mImageButton_LeftDecPageNum.setVisibility(View.GONE);
+        mImageButton_RightIncPageNum.setVisibility(View.GONE);
+    }
+
+
+    @Override
+    public void disableLeftRowImageBtn() {
+        mImageButton_LeftDecPageNum.setEnabled(false);
+    }
+
+    @Override
+    public void enableLeftRowImageBtn() {
+        mImageButton_LeftDecPageNum.setEnabled(true);
+    }
+
+
+    @Override
+    public void disableRightRowImageBtn()
+    {
+        mImageButton_RightIncPageNum.setEnabled(false);
+    }
+
+    @Override
+    public void enableRightRowImageBtn()
+    {
+        mImageButton_RightIncPageNum.setEnabled(true);
+    }
+
     /**
      * Function initialize listeners.
      */
@@ -166,6 +225,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
             }
         });
+
 
 
 
@@ -200,6 +260,65 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 optians.show();
             }
         });
+
+
+
+
+
+        mImageButton_RightIncPageNum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mMainPresenter.clickOnRightArrowBtn();
+            }
+        });
+
+
+        mImageButton_LeftDecPageNum.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                mMainPresenter.clickOnLeftArrowBtn();
+            }
+        });
+
+
+        mRecyclerView_BookItems.addOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
+                super.onScrollStateChanged(recyclerView, newState);
+
+
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mRecyclerView_BookItems.getLayoutManager();
+
+
+                /** Set last visible position in recylerView. */
+                int lastPos =  linearLayoutManager.findLastVisibleItemPosition();
+
+                Log.v(TAG, "lastPos = " + Integer.toString(lastPos));
+
+
+                /** If last visible item is a last in overall array of items
+                 *  than show {@link mImageButton_LeftDecPageNum},
+                 * {@link mImageButton_RightIncPageNum}. */
+                if ( lastPos == (getBookItems().size() - 1 ))
+                {
+                    mImageButton_LeftDecPageNum.setVisibility(View.VISIBLE);
+                    mImageButton_RightIncPageNum.setVisibility(View.VISIBLE);
+                }
+                /**  Else hide them {@link mImageButton_LeftDecPageNum},
+                 * {@link mImageButton_RightIncPageNum}. */
+                else
+                {
+                    mImageButton_LeftDecPageNum.setVisibility(View.GONE);
+                    mImageButton_RightIncPageNum.setVisibility(View.GONE);
+                }
+            }
+        });
+
+
 
 
 

@@ -22,6 +22,16 @@ public interface GoogleBookServ {
                );
 
 
+
+
+    @GET("/books/v1/volumes")
+    Call<BookFindResponse> nextResPageRequest(
+            @Query("q") String aRequest,
+            @Query("startIndex") String aPage
+    );
+
+
+
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://www.googleapis.com")
             .addConverterFactory(GsonConverterFactory.create())

@@ -10,6 +10,8 @@ public interface MainView {
 
 
 
+    void hideStartImage();
+
     String getSearchRequest();
 
     void textViewSetText(String text);
@@ -21,5 +23,21 @@ public interface MainView {
     ArrayList<BookViewItem> getBookItems();
 
     void setNewBookItems(ArrayList<BookViewItem> newBookItems);
+
+
+    void showLeftRightRowImageBtn();
+
+
+
+
+    void hideLeftRightRowImageBtn();
+
+    void enableLeftRowImageBtn();
+
+    void disableLeftRowImageBtn();
+
+    void enableRightRowImageBtn();
+
+    void disableRightRowImageBtn();
 
 }

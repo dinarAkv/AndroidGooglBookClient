@@ -17,11 +17,15 @@ public interface MainPresenter  {
 
     void clickOnSearchBtn();
 
+    void clickOnRightArrowBtn();
+
+    void clickOnLeftArrowBtn();
+
     void sortByTitle();
 
     void sortByPublishDate();
 
-    void onResponseToRequestOfServer(ArrayList<BookViewItem> bookViewItem);
+    void onResponseToRequestOfServer(ArrayList<BookViewItem> bookViewItem, int totalRequestsNum);
 
     void onFailureToRequestOfServer(Call<BookFindResponse> call, Throwable t);
 
