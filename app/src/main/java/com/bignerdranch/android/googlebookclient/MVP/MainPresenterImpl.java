@@ -1,5 +1,7 @@
 package com.bignerdranch.android.googlebookclient.MVP;
 
+import android.os.Bundle;
+
 import com.bignerdranch.android.googlebookclient.Helper.Sorter;
 import com.bignerdranch.android.googlebookclient.Models.BookFindResponse;
 import com.bignerdranch.android.googlebookclient.Remote.InternetConnection;
@@ -25,17 +27,69 @@ public class MainPresenterImpl implements MainPresenter {
 
         mMainActivity = mainActivity;
         mSearchPages = new Pages();
+
+        mInternetConnection = new InternetConnection(this);
     }
 
     /** Realize client/server requests. */
     private InternetConnection mInternetConnection;
+
+
+    @Override
+    public Bundle onSaveInstanceState(Bundle outState)
+    {
+        outState.putInt(MainActivity.SAVE_CURRENT_SEARCH_RESULT_NUM, mSearchPages.getCurrentResNum());
+        outState.putString(MainActivity.SAVE_CURRENT_SEARCH_STRING, mMainActivity.getSearchRequest());
+        outState.putInt(MainActivity.SAVE_CURRENT_SEARCH_TOTAL_RES_NUM, mSearchPages.getTotlaResultsNum());
+        return outState;
+    }
+
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        /** Get request strin in search line. */
+        String request = savedInstanceState.getString(MainActivity.SAVE_CURRENT_SEARCH_STRING);
+        mMainActivity.setSearchRequest(request);
+
+        /** Restore search result counter. */
+        mSearchPages.setCurrentResultCounter(savedInstanceState.getInt(MainActivity.SAVE_CURRENT_SEARCH_RESULT_NUM));
+
+        /** Restore total number of results for this request. */
+        mSearchPages.setTotlaResultsNum(savedInstanceState.getInt(MainActivity.SAVE_CURRENT_SEARCH_TOTAL_RES_NUM));
+
+        /** Restore view objects. */
+        mMainActivity.restoreViewAfterConfigurationChanged();
+
+
+        /** Check is allow to click on left arrow button.
+         * If it is first page of searching results than hide this page. */
+        if (mSearchPages.getCurrentResNum() == 0)
+        {
+            mMainActivity.disableLeftRowImageBtn();
+        }
+
+
+
+        /** Check if next searching page exist. If it not exits (false) than
+         * disable next page button. */
+        if (mSearchPages.isNextSearchResultExist())
+        {
+            mMainActivity.enableRightRowImageBtn();
+        }
+        /** Else we can load next searching page so enable next page button. */
+        else
+        {
+            mMainActivity.disableRightRowImageBtn();
+        }
+    }
 
     /**
      * Realize reaction click on button for searching book on base of key words.
      */
     @Override
     public void clickOnSearchBtn() {
-        mInternetConnection = new InternetConnection(this);
+
 
         /** Get users request. */
         String userRequest = mMainActivity.getSearchRequest();
@@ -87,17 +141,7 @@ public class MainPresenterImpl implements MainPresenter {
 
 
 
-//        /** Check if next searching page exist. If it not exits (false) than
-//         * disable next page button. */
-//        if (mSearchPages.isNextSearchResultExist())
-//        {
-//            mMainActivity.disableRightRowImageBtn();
-//        }
-//        /** Else we can load next searching page so enable next page button. */
-//        else
-//        {
-//            mMainActivity.enableRightRowImageBtn();
-//        }
+
 
 
     }
@@ -202,4 +246,13 @@ public class MainPresenterImpl implements MainPresenter {
         /** Set sorted items and show changes. */
         mMainActivity.setNewBookItems(bookViewItems);
     }
+
+
+
+
+
+
+
+
+
 }

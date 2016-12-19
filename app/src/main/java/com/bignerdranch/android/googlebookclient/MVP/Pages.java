@@ -36,6 +36,10 @@ public class Pages {
         mCurrentResNum += NUMBER_OF_RESULTS_IN_PAGE;
     }
 
+    public void setCurrentResultCounter(int counterNum)
+    {
+        mCurrentResNum = counterNum;
+    }
 
     public void decreaseResNum()
     {

@@ -1,11 +1,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activity_main"
+    android:id="@+id/linaerLayoutMainActivity"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bignerdranch.android.googlebookclient.MVP.MainActivity">
+    tools:context="com.bignerdranch.android.googlebookclient.MVP.MainActivity"
+
+
+    >
 
 
 
@@ -23,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/hintSearchBookText"
-        android:text="sd rf gg ht pp 12 oo 22"
+        android:text="an de fr sq oo po 12 ghtr"
         android:id="@+id/editTextBookSearch"
         />
 

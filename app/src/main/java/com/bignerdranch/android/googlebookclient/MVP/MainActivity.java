@@ -1,5 +1,7 @@
 package com.bignerdranch.android.googlebookclient.MVP;
 
+import android.content.res.Configuration;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bignerdranch.android.googlebookclient.R;
@@ -35,6 +38,26 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     /** Presenter of MVP pattern. */
     private MainPresenter mMainPresenter;
+
+
+
+
+
+    /** Id for save current searching phrase in search line. */
+    static final String SAVE_CURRENT_SEARCH_STRING = "save_current_search_string";
+    /** Id for save current search result. */
+    static final String SAVE_CURRENT_SEARCH_RESULT_NUM = "save_current_search_result_num";
+    /** Id for save total number of results for this request. */
+    static final String SAVE_CURRENT_SEARCH_TOTAL_RES_NUM = "save_current_search_total_res_num";
+
+
+
+
+
+
+
+    @BindView(R.id.linaerLayoutMainActivity)
+    LinearLayout mLinearLayout_MainActivity;
 
 
     /** Image before search link. */
@@ -71,10 +94,18 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
 
 
+    /** Adapter for {@link BookRecyclerViewAdapter} restored after configuration has changed. */
+    private BookRecyclerViewAdapter mRestoredBookRecyclerViewAdapter;
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Log.d(TAG, "ON CREATE");
 
         /** Bind view objects. */
         ButterKnife.bind(this);
@@ -84,14 +115,106 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
 
 
+
         /** Initialize listeners. */
         initListeners();
 
 
 
 
+
+
     }
 
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        Log.d(TAG, "ON RESUME");
+    }
+
+
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        Log.d(TAG, "ON PAUSE");
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        Log.d(TAG, "ON STOP");
+    }
+
+    @Override
+    protected void onRestart()
+    {
+        Log.d(TAG, "ON RESTART");
+        super.onRestart();
+
+
+
+    }
+
+
+
+
+    @Override
+    public Object onRetainCustomNonConfigurationInstance()
+    {
+        /** Save adapter to avoid new information load. */
+        return mRecyclerView_BookItems.getAdapter();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+
+        Log.d(TAG, "onSaveInstanceState");
+
+        outState = mMainPresenter.onSaveInstanceState(outState);
+
+        super.onSaveInstanceState(outState);
+
+    }
+
+
+    @Override
+    public void restoreViewAfterConfigurationChanged()
+    {
+        /** Get saved adapter object. */
+        mRestoredBookRecyclerViewAdapter = (BookRecyclerViewAdapter) getLastCustomNonConfigurationInstance();
+
+        /** If adapter and recyclerView doesn't null than show content of
+         * recyclerView adapter. */
+        if (mRestoredBookRecyclerViewAdapter != null && mRecyclerView_BookItems != null)
+        {
+            /** Attach adapter to recyclerView. */
+            mRecyclerView_BookItems.setAdapter(mRestoredBookRecyclerViewAdapter);
+            /** Set layoutManager to position the items. */
+            mRecyclerView_BookItems.setLayoutManager(new LinearLayoutManager(this));
+            /** Restore state when no start image. */
+            mImageView_StartImage.setVisibility(View.GONE);
+        }
+
+
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+
+        Log.d(TAG, "onRestoreInstanceState");
+
+        mMainPresenter.onRestoreInstanceState(savedInstanceState);
+
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 
     @Override
     public void hideStartImage()
@@ -109,8 +232,18 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
 
+    /**
+     * Set text for search request.
+     * @param request - text to set.
+     */
     @Override
-    public void textViewSetText(String text) {
+    public void setSearchRequest(String request)
+    {
+        mEditText_BookSearch.setText(request);
+    }
+
+    @Override
+    public void textViewFailureMessageSetText(String text) {
         mTextView_FailureMessage.setText(text);
     }
 

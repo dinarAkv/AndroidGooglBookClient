@@ -1,5 +1,7 @@
 package com.bignerdranch.android.googlebookclient.MVP;
 
+import android.os.Bundle;
+
 import com.bignerdranch.android.googlebookclient.Models.BookFindResponse;
 import com.bignerdranch.android.googlebookclient.UI.BookViewItem;
 
@@ -14,6 +16,11 @@ public interface MainPresenter  {
 
 
 
+
+
+    Bundle onSaveInstanceState(Bundle outState);
+
+    void  onRestoreInstanceState(Bundle savedInstanceState);
 
     void clickOnSearchBtn();
 

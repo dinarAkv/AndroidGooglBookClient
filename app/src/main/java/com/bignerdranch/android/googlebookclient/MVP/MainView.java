@@ -10,11 +10,16 @@ public interface MainView {
 
 
 
+
+    void restoreViewAfterConfigurationChanged();
+
     void hideStartImage();
 
     String getSearchRequest();
 
-    void textViewSetText(String text);
+    void setSearchRequest(String request);
+
+    void textViewFailureMessageSetText(String text);
 
     void showFailureOnResponseMessage(String message);
 
